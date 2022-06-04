@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2022": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+
+  "rules": {
+    "semi": "warn",
+    "eol-last": "warn",
+    "no-multi-spaces": "warn",
+    "no-trailing-spaces": "warn",
+    "quotes": ["warn", "double"],
+    "comma-style": ["warn", "last"],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-var": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "camelcase": "error",
+    "dot-notation": "error",
+    "eqeqeq": ["error", "always"],
+    "no-multiple-empty-lines": ["warn", { "max": 1 }],
+    "indent": ["warn", 2]
+  }
+}
