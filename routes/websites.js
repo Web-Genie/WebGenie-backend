@@ -1,14 +1,17 @@
 const express = require("express");
-const router = express.Router();
+const websiteRouter = express.Router();
+const { decodeToken } = require("../routes/middleware/authentication");
+const {
+  getEachWebsite,
+  updateWebsite,
+  deleteWebsite,
+  postWebsite,
+} = require("./controllers/websites.controller");
 
-router.post("/", websitesController.create);
+websiteRouter.post("/", decodeToken, postWebsite);
+websiteRouter.get("/:website_id", decodeToken, getEachWebsite);
+websiteRouter.patch("/:website_id", decodeToken, updateWebsite);
+websiteRouter.delete("/:website_id", decodeToken, deleteWebsite);
+websiteRouter.post("/:website_id/deploy", decodeToken);
 
-router.get("/:website_id", websitesController.get);
-
-router.patch("/:website_id", websitesController.update);
-
-router.delete("/:website_id", websitesController.delete);
-
-router.post("/:website_id/deploy", websitesDeployController.create);
-
-module.exports = router;
+module.exports = websiteRouter;

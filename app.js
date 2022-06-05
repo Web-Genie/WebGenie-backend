@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-const loginRouter = require("./routes/websites");
+const loginRouter = require("./routes/login");
 const websitesRouter = require("./routes/websites");
 
 app.use("/api/login", loginRouter);
