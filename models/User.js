@@ -4,9 +4,11 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
+      required: true,
     },
     image: {
       type: String,
@@ -21,4 +23,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

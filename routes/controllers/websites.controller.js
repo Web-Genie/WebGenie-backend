@@ -61,14 +61,14 @@ exports.deleteWebsite = async (req, res, next) => {
 exports.updateWebsite = async (req, res, next) => {
   try {
     const websiteId = req.params.website_id;
-    const { title, usercode } = req.body;
+    const { title, userCode } = req.body;
 
     await Website.findOneAndUpdate(
       { _id: websiteId },
-      { title: title, userSavedCode: usercode }
+      { title: title, userSavedCode: userCode }
     );
 
-    return res.status(200).json({ message: "success" });
+    res.status(200).json({ message: "success" });
   } catch (error) {
     next(error);
   }
