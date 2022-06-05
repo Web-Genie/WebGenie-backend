@@ -5,15 +5,15 @@ router.post("/", function(req, res, next) {
   
 });
 
-router.get("/", function(req, res, next) {
+router.get("/:website_id", function(req, res, next) {
   
 });
 
-router.patch("/", function(req, res, next) {
+router.patch("/:website_id", function(req, res, next) {
   
 });
 
-router.delete("/", function(req, res, next) {
+router.delete("/:website_id", function(req, res, next) {
   
 });
 

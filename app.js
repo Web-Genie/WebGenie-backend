@@ -4,15 +4,14 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const db = require("./config/db");
+const connectDB = require("./config/db");
 
-const index = require("./routes/index");
 const websites = require("./routes/websites");
 const login = require("./routes/login");
 
 const app = express();
+connectDB();
 
-app.set("view engine", "jade"); // test
 app.set("views", path.join(__dirname, "views"));
 
 app.use(logger("dev"));
@@ -21,8 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-//라우터 설정
-app.use("/", index); //test
 app.use("/api/login", login);
 app.use("/api/websites", websites);
 
