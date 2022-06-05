@@ -4,13 +4,9 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const connectDB = require("./config/db");
-
-const websitesRouter = require("./routes/websites");
-const loginRouter = require("./routes/login");
+require("./config/db")();
 
 const app = express();
-connectDB();
 
 app.set("views", path.join(__dirname, "views"));
 
@@ -19,6 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+const loginRouter = require("./routes/websites");
+const websitesRouter = require("./routes/websites");
 
 app.use("/api/login", loginRouter);
 app.use("/api/websites", websitesRouter);
