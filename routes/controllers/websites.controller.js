@@ -2,9 +2,13 @@ const User = require("../../models/User");
 const Website = require("../../models/Website");
 
 exports.postWebsite = async (req, res, next) => {
+  const { email } = req.user;
+  const { title, userCode } = req.body;
+
   try {
-    const { email } = req.user;
-    const { title, userCode } = req.body;
+    if (!email || !title || !userCode) {
+      return next(error);
+    }
 
     const existUser = User.findOne({ email });
     const newSite = await Website.create({
@@ -26,8 +30,12 @@ exports.postWebsite = async (req, res, next) => {
 };
 
 exports.getEachWebsite = async (req, res, next) => {
+  const { email } = req.user;
+
   try {
-    const { email } = req.user;
+    if (!email) {
+      return next(error);
+    }
 
     const user = await User.findOne({ email });
     const eachWebsite = await Website.find({ author: user._id }).populate(
@@ -41,9 +49,13 @@ exports.getEachWebsite = async (req, res, next) => {
 };
 
 exports.deleteWebsite = async (req, res, next) => {
+  const { email } = req.user;
+  const websiteId = req.params.website_id;
+
   try {
-    const { email } = req.user;
-    const websiteId = req.params.website_id;
+    if (!email || !websiteId) {
+      return next(error);
+    }
 
     await Website.findByIdAndDelete(websiteId);
     await User.findOneAndUpdate(
@@ -59,9 +71,13 @@ exports.deleteWebsite = async (req, res, next) => {
 };
 
 exports.updateWebsite = async (req, res, next) => {
+  const websiteId = req.params.website_id;
+  const { title, userCode } = req.body;
+
   try {
-    const websiteId = req.params.website_id;
-    const { title, userCode } = req.body;
+    if (!websiteId || !title || !userCode) {
+      return next(error);
+    }
 
     await Website.findOneAndUpdate(
       { _id: websiteId },
