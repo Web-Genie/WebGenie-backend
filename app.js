@@ -6,8 +6,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const connectDB = require("./config/db");
 
-const websites = require("./routes/websites");
-const login = require("./routes/login");
+const websitesRouter = require("./routes/websites");
+const loginRouter = require("./routes/login");
 
 const app = express();
 connectDB();
@@ -20,8 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/login", login);
-app.use("/api/websites", websites);
+app.use("/api/login", loginRouter);
+app.use("/api/websites", websitesRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
