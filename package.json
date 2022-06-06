@@ -2,11 +2,6 @@
   "name": "team-project",
   "version": "0.0.0",
   "private": true,
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
-  },
   "scripts": {
     "start": "nodemon ./bin/www"
   },
@@ -15,8 +10,8 @@
     "debug": "~2.6.9",
     "dotenv": "^16.0.1",
     "express": "~4.16.1",
+    "firebase-admin": "^10.2.0",
     "http-errors": "~1.6.3",
-    "husky": "^8.0.1",
     "mongoose": "^6.3.5",
     "morgan": "~1.9.1"
   },
