@@ -1,6 +1,6 @@
 const User = require("../../models/User");
 
-exports.postUser = async (req, res, next) => {
+exports.getUser = async (req, res, next) => {
   try {
     const { name, email, picture } = req.user;
     const existUser = await User.findOne({ email });
