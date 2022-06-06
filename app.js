@@ -4,10 +4,13 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 require("./config/db")();
+require("./config/firebaseAdmin");
 
 const app = express();
 
+app.use(cors());
 app.set("views", path.join(__dirname, "views"));
 
 app.use(logger("dev"));
