@@ -1,8 +1,8 @@
 const express = require("express");
-const router = express.Router();
+const loginRouter = express.Router();
+const { decodeToken } = require("../routes/middleware/authentication");
+const { getUser } = require("./controllers/login.controller");
 
-router.post("/", function(req, res, next) {
-	
-});
+loginRouter.get("/", decodeToken, getUser);
 
-module.exports = router;
+module.exports = loginRouter;

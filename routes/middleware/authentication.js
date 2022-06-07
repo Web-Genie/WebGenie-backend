@@ -7,12 +7,11 @@ exports.decodeToken = async (req, res, next) => {
 
     if (existedUser) {
       req.user = existedUser;
-
       return next();
     }
 
     return res.json({ message: "Unauthorized" });
   } catch (error) {
-    return res.json({ message: "internal error" });
+    return res.json({ message: "Internal error" });
   }
 };
