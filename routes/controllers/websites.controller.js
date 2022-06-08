@@ -10,7 +10,7 @@ exports.postWebsite = async (req, res, next) => {
       return next(error);
     }
 
-    const existUser = User.findOne({ email });
+    const existUser = User.findOne({ email }).lean();
     const newSite = await Website.create({
       title: title,
       author: existUser._id,
@@ -37,7 +37,7 @@ exports.getEachWebsite = async (req, res, next) => {
       return next(error);
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
     const eachWebsite = await Website.find({ author: user._id }).populate(
       "author"
     );

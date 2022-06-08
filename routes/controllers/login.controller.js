@@ -4,7 +4,7 @@ const Website = require("../../models/Website");
 exports.getUser = async (req, res, next) => {
   try {
     const { name, email, picture } = req.user;
-    const existUser = await User.findOne({ email });
+    const existUser = await User.findOne({ email }).lean();
 
     if (!existUser) {
       await User.create({
@@ -16,7 +16,7 @@ exports.getUser = async (req, res, next) => {
       return res.status(201).json({ message: "login success" });
     }
 
-    const userWebsites = await Website.find({ author: existUser._id });
+    const userWebsites = await Website.find({ author: existUser._id }).lean();
 
     res.status(200).json(userWebsites);
   } catch (error) {

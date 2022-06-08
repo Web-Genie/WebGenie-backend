@@ -9,7 +9,7 @@ module.exports = async () => {
     console.log("MongoDB Connected");
   } catch (error) {
     console.log(`Error: ${error.message}`);
+
     process.exit();
   }
 };
-

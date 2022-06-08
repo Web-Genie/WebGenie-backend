@@ -10,7 +10,7 @@ exports.decodeToken = async (req, res, next) => {
       return next();
     }
 
-    return res.json({ message: "Unauthorized" });
+    res.json({ message: "Unauthorized" });
   } catch (error) {
     return res.json({ message: "Internal error" });
   }
