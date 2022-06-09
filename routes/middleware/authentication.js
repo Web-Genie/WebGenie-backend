@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { ERROR_MESSAGE } = require("../../constants/httpManagement");
 
 exports.decodeToken = async (req, res, next) => {
   try {
@@ -10,8 +11,8 @@ exports.decodeToken = async (req, res, next) => {
       return next();
     }
 
-    return res.json({ message: "Unauthorized" });
+    res.json({ message: ERROR_MESSAGE.NOT_AUTHENTICATED });
   } catch (error) {
-    return res.json({ message: "Internal error" });
+    return res.json({ message: ERROR_MESSAGE.OCCURRED_SERVER_ERROR });
   }
 };

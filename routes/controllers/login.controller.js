@@ -1,10 +1,18 @@
 const User = require("../../models/User");
 const Website = require("../../models/Website");
+const {
+  HTTP_STATUS_CODE,
+  ERROR_STATUS_CODE,
+  HTTP_STATUS_MESSAGE,
+  ERROR_MESSAGE,
+} = require("../../constants/httpManagement");
+const createError = require("http-errors");
 
 exports.getUser = async (req, res, next) => {
+  const { name, email, picture } = req.user;
+
   try {
-    const { name, email, picture } = req.user;
-    const existUser = await User.findOne({ email });
+    const existUser = await User.findOne({ email }).lean();
 
     if (!existUser) {
       await User.create({
@@ -13,13 +21,20 @@ exports.getUser = async (req, res, next) => {
         image: picture,
       });
 
-      return res.status(201).json({ message: "login success" });
+      return res
+        .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
+        .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
     }
 
-    const userWebsites = await Website.find({ author: existUser._id });
+    const userWebsites = await Website.find({ author: existUser._id }).lean();
 
-    res.status(200).json(userWebsites);
+    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: userWebsites });
   } catch (error) {
-    next(error);
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
   }
 };
