@@ -71,6 +71,35 @@ exports.getEachWebsite = async (req, res, next) => {
   }
 };
 
+exports.updateWebsite = async (req, res, next) => {
+  const websiteId = req.params.website_id;
+  const { title, userCode } = req.body;
+
+  try {
+    if (!websiteId || !title || !userCode) {
+      return next(
+        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
+      );
+    }
+
+    await Website.findOneAndUpdate(
+      { _id: websiteId },
+      { title: title, userSavedCode: userCode }
+    );
+
+    res
+      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
+      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
+  } catch (error) {
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
+  }
+};
+
 exports.deleteWebsite = async (req, res, next) => {
   const { email } = req.user;
   const websiteId = req.params.website_id;
@@ -87,35 +116,6 @@ exports.deleteWebsite = async (req, res, next) => {
       { email },
       { $pull: { website: websiteId } },
       { new: true }
-    );
-
-    res
-      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
-      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
-  } catch (error) {
-    next(
-      createError(
-        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
-      )
-    );
-  }
-};
-
-exports.updateWebsite = async (req, res, next) => {
-  const websiteId = req.params.website_id;
-  const { title, userCode } = req.body;
-
-  try {
-    if (!websiteId || !title || !userCode) {
-      return next(
-        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
-      );
-    }
-
-    await Website.findOneAndUpdate(
-      { _id: websiteId },
-      { title: title, userSavedCode: userCode }
     );
 
     res

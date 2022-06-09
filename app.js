@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 const loginRouter = require("./routes/login");
 const websitesRouter = require("./routes/websites");
 
-app.use("/api/login", loginRouter);
-app.use("/api/websites", websitesRouter);
+app.use("/login", loginRouter);
+app.use("/websites", websitesRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
