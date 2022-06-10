@@ -10,20 +10,19 @@ const createError = require("http-errors");
 
 exports.postWebsite = async (req, res, next) => {
   const { email } = req.user;
-  const { title, userCode } = req.body;
 
   try {
-    if (!email || !title || !userCode) {
+    if (!email) {
       return next(
         createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
       );
     }
 
-    const existUser = User.findOne({ email }).lean();
+    const existUser = await User.findOne({ email: email });
     const newSite = await Website.create({
-      title: title,
+      title: "",
       author: existUser._id,
-      userSavedCode: userCode,
+      userSavedCode: "",
     });
 
     await User.findOneAndUpdate(
@@ -32,9 +31,7 @@ exports.postWebsite = async (req, res, next) => {
       { new: true }
     );
 
-    res
-      .status(HTTP_STATUS_CODE.CREATE_SUCCESS)
-      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_CREATE });
+    res.status(HTTP_STATUS_CODE.CREATE_SUCCESS).json({ result: newSite });
   } catch (error) {
     next(
       createError(
