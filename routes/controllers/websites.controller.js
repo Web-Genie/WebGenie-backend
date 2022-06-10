@@ -10,6 +10,7 @@ const createError = require("http-errors");
 
 exports.postWebsite = async (req, res, next) => {
   const { email } = req.user;
+  const { title } = req.body;
 
   try {
     if (!email) {
@@ -20,7 +21,7 @@ exports.postWebsite = async (req, res, next) => {
 
     const existUser = await User.findOne({ email: email });
     const newSite = await Website.create({
-      title: "",
+      title: title,
       author: existUser._id,
       userSavedCode: "",
     });
