@@ -3,7 +3,6 @@ const Website = require("../../models/Website");
 const {
   HTTP_STATUS_CODE,
   ERROR_STATUS_CODE,
-  HTTP_STATUS_MESSAGE,
   ERROR_MESSAGE,
 } = require("../../constants/httpManagement");
 const createError = require("http-errors");
@@ -15,7 +14,7 @@ exports.getUser = async (req, res, next) => {
     const existUser = await User.findOne({ email }).lean();
 
     if (!existUser) {
-      await User.create({
+      const newUser = await User.create({
         name,
         email,
         image: picture,
@@ -23,12 +22,14 @@ exports.getUser = async (req, res, next) => {
 
       return res
         .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
-        .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
+        .json({ user: newUser });
     }
 
     const userWebsites = await Website.find({ author: existUser._id }).lean();
 
-    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: userWebsites });
+    res
+      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
+      .json({ user: existUser, websites: userWebsites });
   } catch (error) {
     next(
       createError(

@@ -10,6 +10,7 @@ const createError = require("http-errors");
 
 exports.postWebsite = async (req, res, next) => {
   const { email } = req.user;
+  const { title } = req.body;
 
   try {
     if (!email) {
@@ -20,7 +21,7 @@ exports.postWebsite = async (req, res, next) => {
 
     const existUser = await User.findOne({ email: email });
     const newSite = await Website.create({
-      title: "",
+      title: title,
       author: existUser._id,
       userSavedCode: "",
     });
@@ -43,19 +44,16 @@ exports.postWebsite = async (req, res, next) => {
 };
 
 exports.getEachWebsite = async (req, res, next) => {
-  const { email } = req.user;
+  const { params } = req.headers;
 
   try {
-    if (!email) {
+    if (!params) {
       return next(
         createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
       );
     }
 
-    const user = await User.findOne({ email }).lean();
-    const eachWebsite = await Website.find({ author: user._id }).populate(
-      "author"
-    );
+    const eachWebsite = await Website.findOne({ _id: params });
 
     res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: eachWebsite });
   } catch (error) {
@@ -69,24 +67,22 @@ exports.getEachWebsite = async (req, res, next) => {
 };
 
 exports.updateWebsite = async (req, res, next) => {
-  const websiteId = req.params.website_id;
-  const { title, userCode } = req.body;
+  const { title, editorCode, websiteId } = req.body;
 
   try {
-    if (!websiteId || !title || !userCode) {
+    if (!websiteId || !title) {
       return next(
         createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
       );
     }
 
-    await Website.findOneAndUpdate(
+    const result = await Website.findOneAndUpdate(
       { _id: websiteId },
-      { title: title, userSavedCode: userCode }
+      { title: title, userSavedCode: editorCode },
+      { new: true }
     );
 
-    res
-      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
-      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
+    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: result });
   } catch (error) {
     next(
       createError(
@@ -99,25 +95,26 @@ exports.updateWebsite = async (req, res, next) => {
 
 exports.deleteWebsite = async (req, res, next) => {
   const { email } = req.user;
-  const websiteId = req.params.website_id;
+  const { params } = req.headers;
 
   try {
-    if (!email || !websiteId) {
+    if (!email || !params) {
       return next(
         createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
       );
     }
 
-    await Website.findByIdAndDelete(websiteId);
-    await User.findOneAndUpdate(
-      { email },
-      { $pull: { website: websiteId } },
-      { new: true }
-    );
+    await Website.findByIdAndDelete(params);
+    await User.findOneAndUpdate({ email }, { $pull: { websites: params } });
 
-    res
-      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
-      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
+    const existUser = await User.findOne({ email }).lean();
+    const userWebsites = await Website.find({ author: existUser._id }).lean();
+
+    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({
+      message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST,
+      user: existUser,
+      websites: userWebsites,
+    });
   } catch (error) {
     next(
       createError(
