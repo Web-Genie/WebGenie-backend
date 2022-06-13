@@ -12,6 +12,9 @@ const websiteSchema = new mongoose.Schema(
     userSavedCode: {
       type: String,
     },
+    isDeployed: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );
