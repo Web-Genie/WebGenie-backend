@@ -1,4 +1,6 @@
 const createError = require("http-errors");
+const S3 = require("aws-sdk/clients/s3");
+const fs = require("fs");
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const {
   ERROR_STATUS_CODE,
@@ -43,7 +45,6 @@ exports.postImage = async (req, res, next) => {
 
 exports.deleteImage = async (req, res, next) => {
   const url = req.headers.params;
-
   try {
     if (!url) {
       return next(
