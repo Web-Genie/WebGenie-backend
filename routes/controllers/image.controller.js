@@ -1,19 +1,21 @@
 const createError = require("http-errors");
+const S3 = require("aws-sdk/clients/s3");
 const fs = require("fs");
-const {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} = require("@aws-sdk/client-s3");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const {
   ERROR_STATUS_CODE,
   ERROR_MESSAGE,
 } = require("../../constants/httpManagement");
+const { upload } = require("../../util");
+
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const region = process.env.AWS_REGION;
 
 const newS3 = new S3Client({
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
   },
   region: process.env.AWS_REGION,
 });
@@ -28,15 +30,9 @@ exports.postImage = async (req, res, next) => {
       );
     }
 
-    const params = {
-      Bucket: process.env.AWS_ACCESS_KEY_ID,
-      Body: fs.createReadStream(image.path),
-      Key: image.filename,
-    };
+    const result = await upload(image);
 
-    await newS3.send(new PutObjectCommand(params));
-
-    res.status(201).json({ location: result.Location });
+    return res.status(201).json({ location: result.Location });
   } catch (error) {
     next(
       createError(
@@ -49,7 +45,6 @@ exports.postImage = async (req, res, next) => {
 
 exports.deleteImage = async (req, res, next) => {
   const url = req.headers.params;
-
   try {
     if (!url) {
       return next(
