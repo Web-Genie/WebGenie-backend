@@ -7,6 +7,7 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.109.0",
     "aws-sdk": "^2.1152.0",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
