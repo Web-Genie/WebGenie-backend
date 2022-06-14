@@ -1,3 +1,4 @@
+const createError = require("http-errors");
 const User = require("../../models/User");
 const Website = require("../../models/Website");
 const {
@@ -5,7 +6,6 @@ const {
   ERROR_STATUS_CODE,
   ERROR_MESSAGE,
 } = require("../../constants/httpManagement");
-const createError = require("http-errors");
 
 exports.getUser = async (req, res, next) => {
   const { name, email, picture } = req.user;

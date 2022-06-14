@@ -1,9 +1,14 @@
+const createError = require("http-errors");
 const fs = require("fs");
 const {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
 } = require("@aws-sdk/client-s3");
+const {
+  ERROR_STATUS_CODE,
+  ERROR_MESSAGE,
+} = require("../../constants/httpManagement");
 
 const newS3 = new S3Client({
   credentials: {
@@ -14,8 +19,14 @@ const newS3 = new S3Client({
 });
 
 exports.postImage = async (req, res, next) => {
+  const image = req.file;
+
   try {
-    const image = req.file;
+    if (!image) {
+      return next(
+        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
+      );
+    }
 
     const params = {
       Bucket: process.env.AWS_ACCESS_KEY_ID,
@@ -27,13 +38,24 @@ exports.postImage = async (req, res, next) => {
 
     res.status(201).json({ location: result.Location });
   } catch (error) {
-    next(error);
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
   }
 };
 
 exports.deleteImage = async (req, res, next) => {
+  const url = req.headers.params;
+
   try {
-    const url = req.headers.params;
+    if (!url) {
+      return next(
+        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
+      );
+    }
     const splitedUrl = url.split(/[""]/);
 
     for (let i = 0; i < splitedUrl.length; i++) {
@@ -47,6 +69,11 @@ exports.deleteImage = async (req, res, next) => {
 
     return res.status(200).json({ message: "success" });
   } catch (error) {
-    next(error);
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
   }
 };
