@@ -24,6 +24,7 @@ exports.postWebsite = async (req, res, next) => {
       title: title,
       author: existUser._id,
       userSavedCode: "",
+      isDeployed: false,
     });
 
     await User.findOneAndUpdate(
@@ -115,6 +116,57 @@ exports.deleteWebsite = async (req, res, next) => {
       user: existUser,
       websites: userWebsites,
     });
+  } catch (error) {
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
+  }
+};
+
+exports.deployWebsite = async (req, res, next) => {
+  const { websiteId } = req.body;
+
+  try {
+    if (!websiteId) {
+      return next(
+        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
+      );
+    }
+
+    await Website.findOneAndUpdate(
+      { _id: websiteId },
+      { $set: { isDeployed: true } }
+    );
+
+    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({
+      message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST,
+    });
+  } catch (error) {
+    next(
+      createError(
+        ERROR_STATUS_CODE.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGE.OCCURRED_SERVER_ERROR
+      )
+    );
+  }
+};
+
+exports.getDeployedWebsite = async (req, res, next) => {
+  const { params } = req.headers;
+
+  try {
+    if (!params) {
+      return next(
+        createError(ERROR_STATUS_CODE.BAD_REQUEST, ERROR_MESSAGE.NO_DATA)
+      );
+    }
+
+    const eachWebsite = await Website.findOne({ _id: params });
+
+    res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: eachWebsite });
   } catch (error) {
     next(
       createError(
