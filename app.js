@@ -7,14 +7,19 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    credential: "true",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const loginRouter = require("./routes/login");
 const websitesRouter = require("./routes/websites");
 
-app.use("/login", loginRouter);
+app.use("/", loginRouter);
 app.use("/websites", websitesRouter);
 
 app.use(function (req, res, next) {
