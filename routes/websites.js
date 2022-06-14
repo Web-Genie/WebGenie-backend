@@ -6,12 +6,15 @@ const {
   updateWebsite,
   deleteWebsite,
   postWebsite,
+  deployWebsite,
+  getDeployedWebsite,
 } = require("./controllers/websites.controller");
 
 websiteRouter.post("/", decodeToken, postWebsite);
 websiteRouter.get("/:website_id", decodeToken, getEachWebsite);
 websiteRouter.patch("/:website_id", decodeToken, updateWebsite);
 websiteRouter.delete("/:website_id", decodeToken, deleteWebsite);
-websiteRouter.post("/:website_id/deploy");
+websiteRouter.get("/:website_id/deploy", getDeployedWebsite);
+websiteRouter.patch("/:website_id/deploy", decodeToken, deployWebsite);
 
 module.exports = websiteRouter;
