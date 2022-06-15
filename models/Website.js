@@ -9,9 +9,12 @@ const websiteSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    userSavedCode: {
-      type: String,
-    },
+    userSavedCode: [
+      {
+        code: { type: String },
+        time: { type: Date, default: Date.now },
+      },
+    ],
     isDeployed: {
       type: Boolean,
     },
