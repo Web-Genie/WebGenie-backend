@@ -5,11 +5,7 @@ const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION;
 const bucketName = process.env.AWS_BUCKET_NAME;
 
-const s3 = new S3({
-  region: region,
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey,
-});
+const s3 = new S3(region, secretAccessKey, accessKeyId);
 
 const upload = (file) => {
   const fileStream = fs.createReadStream(file.path);

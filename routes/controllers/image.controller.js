@@ -13,16 +13,12 @@ const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION;
 
 const newS3 = new S3Client({
-  credentials: {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-  },
   region: region,
 });
 
 exports.postImage = async (req, res, next) => {
   const image = req.file;
-
+  console.log(image);
   try {
     if (!image) {
       return next(
@@ -31,7 +27,7 @@ exports.postImage = async (req, res, next) => {
     }
 
     const result = await upload(image);
-
+    console.log(result);
     return res.status(201).json({ location: result.Location });
   } catch (error) {
     next(
