@@ -1,15 +1,13 @@
 const createError = require("http-errors");
-const S3 = require("aws-sdk/clients/s3");
-const fs = require("fs");
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const {
   ERROR_STATUS_CODE,
   ERROR_MESSAGE,
+  HTTP_STATUS_CODE,
+  HTTP_STATUS_MESSAGE,
 } = require("../../constants/httpManagement");
 const { upload } = require("../../util");
 
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION;
 
 const newS3 = new S3Client({
@@ -18,7 +16,7 @@ const newS3 = new S3Client({
 
 exports.postImage = async (req, res, next) => {
   const image = req.file;
-  console.log(image);
+
   try {
     if (!image) {
       return next(
@@ -27,8 +25,10 @@ exports.postImage = async (req, res, next) => {
     }
 
     const result = await upload(image);
-    console.log(result);
-    return res.status(201).json({ location: result.Location });
+
+    res
+      .status(HTTP_STATUS_CODE.CREATE_SUCCESS)
+      .json({ location: result.Location });
   } catch (error) {
     next(
       createError(
@@ -41,6 +41,7 @@ exports.postImage = async (req, res, next) => {
 
 exports.deleteImage = async (req, res, next) => {
   const url = req.headers.params;
+
   try {
     if (!url) {
       return next(
@@ -58,7 +59,9 @@ exports.deleteImage = async (req, res, next) => {
       );
     }
 
-    return res.status(200).json({ message: "success" });
+    res
+      .status(HTTP_STATUS_CODE.REQUEST_SUCCESS)
+      .json({ message: HTTP_STATUS_MESSAGE.SUCCESS_REQUEST });
   } catch (error) {
     next(
       createError(
