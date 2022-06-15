@@ -3,7 +3,7 @@ const websiteRouter = express.Router();
 const { decodeToken } = require("../routes/middleware/authentication");
 const {
   getEachWebsite,
-  updateWebsite,
+  saveWebsite,
   deleteWebsite,
   postWebsite,
   deployWebsite,
@@ -12,7 +12,7 @@ const {
 
 websiteRouter.post("/", decodeToken, postWebsite);
 websiteRouter.get("/:website_id", decodeToken, getEachWebsite);
-websiteRouter.patch("/:website_id", decodeToken, updateWebsite);
+websiteRouter.post("/:website_id", decodeToken, saveWebsite);
 websiteRouter.delete("/:website_id", decodeToken, deleteWebsite);
 websiteRouter.get("/:website_id/deploy", getDeployedWebsite);
 websiteRouter.patch("/:website_id/deploy", decodeToken, deployWebsite);
