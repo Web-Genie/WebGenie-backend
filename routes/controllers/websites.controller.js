@@ -20,7 +20,7 @@ exports.postWebsite = async (req, res, next) => {
     }
 
     const existUser = await User.findOne({ email: email });
-    console.log(existUser);
+
     const newSite = await Website.create({
       title: title,
       author: existUser._id,
@@ -69,9 +69,10 @@ exports.getEachWebsite = async (req, res, next) => {
 };
 
 exports.saveWebsite = async (req, res, next) => {
-  const { title, editorCode, websiteId } = req.body;
+  const { title, editorCode, websiteId, backgroundColor } = req.body;
   const currentEditorVersion = {
     code: editorCode,
+    backgroundColor: backgroundColor,
   };
 
   try {

@@ -12,6 +12,7 @@ const websiteSchema = new mongoose.Schema(
     userSavedCode: [
       {
         code: { type: String },
+        backgroundColor: { type: String },
         time: { type: Date, default: Date.now },
       },
     ],
