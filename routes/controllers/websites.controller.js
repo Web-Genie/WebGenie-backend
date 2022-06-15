@@ -1,3 +1,4 @@
+const createError = require("http-errors");
 const User = require("../../models/User");
 const Website = require("../../models/Website");
 const {
@@ -6,7 +7,6 @@ const {
   HTTP_STATUS_MESSAGE,
   ERROR_MESSAGE,
 } = require("../../constants/httpManagement");
-const createError = require("http-errors");
 
 exports.postWebsite = async (req, res, next) => {
   const { email } = req.user;

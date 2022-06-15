@@ -7,20 +7,22 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: false }));
 app.use(
   cors({
     origin: "*",
     credential: "true",
   })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 const loginRouter = require("./routes/login");
 const websitesRouter = require("./routes/websites");
+const imageRouter = require("./routes/image");
 
 app.use("/", loginRouter);
 app.use("/websites", websitesRouter);
+app.use("/image", imageRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

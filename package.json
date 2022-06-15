@@ -7,13 +7,16 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.109.0",
+    "aws-sdk": "^2.1152.0",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^16.0.1",
     "express": "~4.16.1",
     "firebase-admin": "^10.2.0",
     "http-errors": "~1.6.3",
-    "mongoose": "^6.3.5"
+    "mongoose": "^6.3.5",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "eslint": "^8.17.0",
