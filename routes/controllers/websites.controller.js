@@ -20,10 +20,11 @@ exports.postWebsite = async (req, res, next) => {
     }
 
     const existUser = await User.findOne({ email: email });
+    console.log(existUser);
     const newSite = await Website.create({
       title: title,
       author: existUser._id,
-      userSavedCode: "",
+      userSavedCode: { code: "" },
       isDeployed: false,
     });
 
@@ -67,8 +68,11 @@ exports.getEachWebsite = async (req, res, next) => {
   }
 };
 
-exports.updateWebsite = async (req, res, next) => {
+exports.saveWebsite = async (req, res, next) => {
   const { title, editorCode, websiteId } = req.body;
+  const currentEditorVersion = {
+    code: editorCode,
+  };
 
   try {
     if (!websiteId || !title) {
@@ -77,11 +81,12 @@ exports.updateWebsite = async (req, res, next) => {
       );
     }
 
-    const result = await Website.findOneAndUpdate(
-      { _id: websiteId },
-      { title: title, userSavedCode: editorCode },
-      { new: true }
-    );
+    const result = await Website.findById({ _id: websiteId });
+
+    result.title = title;
+    result.userSavedCode.unshift(currentEditorVersion);
+
+    result.save();
 
     res.status(HTTP_STATUS_CODE.REQUEST_SUCCESS).json({ result: result });
   } catch (error) {
